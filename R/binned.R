@@ -1,25 +1,4 @@
-### helper functions
-frsr_bin_multi <- function(sizes = c(4, 6, 8, 12, 18, 24, 32, 48, 64, 96, 128), x_min = 1.0, x_max = 2.0) {
-  # Define constants inside the function
-  floats <- 16384
-  ints <- 524288
-  NRmax <- 1
-  magic_min <- 1596980000L
-  magic_max <- 1598050000L
-
-  do.call(rbind, lapply(sizes, function(n) {
-    frsr_bin(n_bins = n,
-             NRmax = NRmax,
-             x_min = x_min,
-             x_max = x_max,
-             float_samples = floats,
-             magic_samples = ints,
-             magic_min = magic_min,
-             magic_max = magic_max)
-  }))
-}
-
-## helper function for linear programming
+### helper function for linear programming
 find_optimal_buckets <- function(binned, M, chunk_size = 1e4) {
   process_chunk <- function(chunk, M) {
     obj <- chunk$Max_Error
@@ -139,76 +118,6 @@ bucket_selection <- function(df, range = 4:100) {
     as.data.frame()
 }
 
-analyze_bin_changes <- function(df) {
-  # Create bins
-  bins <- seq(0.5, 2.0, length.out = 2049)  # 2049 points to create 2048 bins
-
-  # Assign data to bins
-  df$bin <- cut(df$input,
-                breaks = bins,
-                labels = FALSE,
-                include.lowest = TRUE)
-
-  # Calculate bin statistics
-  bin_stats <- df |>
-    group_by(bin) |>
-    summarize(
-      mean_error = mean(error),
-      mean_magic = mean(magic),
-      .groups = 'drop'
-    ) |>
-    # Calculate changes between consecutive bins
-    mutate(
-      delta_error = mean_error - lag(mean_error),
-      delta_magic = mean_magic - lag(mean_magic)
-    ) |>
-    # Remove first row which has NA in deltas
-    filter(!is.na(delta_error))
-
-  return(bin_stats)
-}
-
-
-### performance of magic constant
-### outside their bins
-compute_oob_performance <- function(data) {
-  frsr_oob <- function(magic, bin_min, bin_max, total_min, total_max) {
-    # Sample the lower out-of-bin range
-    lower_samples <- frsr_sample(
-      n = 1000,  # Adjust sample size as needed
-      magic_min = magic,
-      magic_max = NULL,
-      x_min = total_min,
-      x_max = bin_min
-    )
-
-    # Sample the upper out-of-bin range
-    upper_samples <- frsr_sample(
-      n = 1000,  # Adjust sample size as needed
-      magic_min = magic,
-      magic_max = NULL,
-      x_min = bin_max,
-      x_max = total_max
-    )
-
-    # Combine samples
-    all_samples <- rbind(lower_samples, upper_samples)
-
-    # Compute average error
-    avg_error <- mean(all_samples$error)
-
-    return(avg_error)
-  }
-  data |>
-    group_by(N) |>
-    mutate(
-      OOB_Error = sapply(row_number(), function(i) {
-        frsr_oob(Magic[i], Range_Min[i], Range_Max[i], 0.5, 2.0)
-      })
-    ) |>
-    ungroup()
-}
-
 load_binned_csv <- function(filename) {
   path <- system.file("extdata", filename, package = "visualfrsr")
   if (path == "") {
@@ -251,20 +160,6 @@ build_heatmap_data <- function(bucket_df = load_bucket_sweep()) {
 }
 
 ## deepers
-
-# this took hours to compute, so saving the result
-# bin sizes: c(4, 6, 8, 12, 18, 24, 32, 48, 64, 96, 128)
-prepare_error_df <- function(df) {
-  # Compute differences
-  df$input_diff <- c(NA, diff(df$input))
-  df$error_diff <- c(NA, diff(df$error))
-
-  # Remove rows with NA values caused by diff()
-  df_clean <- na.omit(df)
-
-  # Return the cleaned data frame
-  return(df_clean[, c("input", "error", "input_diff", "error_diff")])
-}
 
 ## pseudo-waterfall
 

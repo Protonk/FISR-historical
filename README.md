@@ -21,7 +21,28 @@ calls so you only run the expensive steps you need. The package depends on
 [frsrr](https://github.com/Protonk/frsr) for the core samplers, so your system
 must have C++20 support to build it.
 
-This project is partially a function of needing to have easy access to the bits in memory of a floating point number, wanting to visualize things easily, and not wanting to use Python. However, it also allows you experiment in two places, "close to the metal" generating data and more abstractly with the data structures you end up with. Data pipelines (binned, clustered, optimized, etc.) now live in their own files under `R/`, while every ggplot builder sits in `R/plotting.R`, making it explicit where to look when you only need visuals versus reproducible datasets.
+This project is partially a function of needing to have easy access to the bits in memory of a floating point number, wanting to visualize things easily, and not wanting to use Python. However, it also allows you experiment in two places, "close to the metal" generating data and more abstractly with the data structures you end up with.
+
+### Data ➜ Transform ➜ Plot workflow
+
+The package follows a repeatable regeneration pipeline:
+
+1. **Pipelines (`data-raw/pipelines/`)** – scripts such as `deconstruction.R`, `clusters.R`, and `binned.R` expose `run_*_pipeline()` entry points. Each call refreshes the `.rda` files under `data/` using the latest sampler configuration.
+2. **Package data (`data/`)** – after a pipeline runs, the compressed datasets (for example `deconstructed.rda`, `representative_clusters.rda`, or `bucket_summary.rda`) become available to the package via `load_*()` helpers.
+3. **Transform helpers (`R/transform-*.R`)** – `prep_*` functions reshape the raw tables for plotting. For instance, `prep_deconstruction_combined()` and `prep_bucket_selection()` bridge pipelines to visuals without duplicating transformation logic in plots.
+4. **Plot modules (`R/plots-*.R`)** – topic-oriented ggplot builders compose layers from the transformed tibbles. The module headers call out the matching pipeline and transform file so contributors can trace the workflow quickly.
+
+Regenerating a dataset therefore looks like:
+
+```r
+devtools::load_all()
+source("data-raw/pipelines/deconstruction.R")
+tbls <- run_deconstruction_pipeline()  # refreshes data/deconstructed.rda, etc.
+viz_ready <- prep_deconstruction_combined(tbls$deconstructed, tbls$widened)
+deconstruction_zoom_plot(viz_ready)
+```
+
+Refer to `data-raw/README.md` for command-line invocations and artifact details.
 
 ### R Files
 
