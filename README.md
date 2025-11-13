@@ -22,26 +22,57 @@ must have C++20 support to build it.
 
 This project is partially a function of needing to have easy access to the bits in memory of a floating point number, wanting to visualize things easily, and not wanting to use Python. However, it also allows you experiment in two places, "close to the metal" generating data and more abstractly with the data structures you end up with.
 
-### Data ➜ Transform ➜ Plot workflow
+### Data ➜ Transform ➜ Plot pipeline
 
-The package follows a repeatable regeneration pipeline:
+The repository is organized as a four-stage conveyor belt:
 
-1. **Pipelines (`data-raw/pipelines/`)** – scripts such as `deconstruction.R`, `clusters.R`, and `binned.R` expose `run_*_pipeline()` entry points. Each call refreshes the `.rda` files under `data/` using the latest sampler configuration.
-2. **Package data (`data/`)** – after a pipeline runs, the compressed datasets (for example `deconstructed.rda`, `representative_clusters.rda`, or `bucket_summary.rda`) become available to the package via `load_*()` helpers.
-3. **Transform helpers (`R/transform-*.R`)** – `prep_*` functions reshape the raw tables for plotting. For instance, `prep_deconstruction_combined()` and `prep_bucket_selection()` bridge pipelines to visuals without duplicating transformation logic in plots.
-4. **Plot modules (`R/plots-*.R`)** – topic-oriented ggplot builders compose layers from the transformed tibbles. The module headers call out the matching pipeline and transform file so contributors can trace the workflow quickly.
+1. **Pipelines (`data-raw/pipelines/`)** – entry-point scripts such as `binned.R`, `deconstruction.R`, and `clusters.R` call into `{frsrr}` samplers and write refreshed `.rda` files under `data/`.
+2. **Package data (`data/`)** – every `.rda` becomes immediately addressable inside the package (for example `bin_samples`, `bucket_summary`, `deconstructed`, `representative_clusters`). The repo ships lightweight placeholder versions so tests and documentation work out of the box; regenerate them for real analysis before drawing conclusions.
+3. **Transforms (`R/transform-*.R`)** – `prep_*` helpers normalize column names, compute derived metrics, and enforce factor levels. Keep all wrangling here so plots stay declarative.
+4. **Plots (`R/plots-*.R`)** – ggplot builders consume the `prep_*` outputs to produce the visuals showcased in `/plots`.
 
-Regenerating a dataset therefore looks like:
+Refreshing any dataset follows this template:
 
 ```r
 devtools::load_all()
 source("data-raw/pipelines/deconstruction.R")
-tbls <- run_deconstruction_pipeline()  # refreshes data/deconstructed.rda, etc.
+tbls <- run_deconstruction_pipeline(save_to_data = TRUE)
 viz_ready <- prep_deconstruction_combined(tbls$deconstructed, tbls$widened)
 deconstruction_zoom_plot(viz_ready)
 ```
 
-Refer to `data-raw/README.md` for command-line invocations and artifact details.
+### Pipeline reference
+
+| Pipeline | Script | Outputs | Command |
+| --- | --- | --- | --- |
+| **Binned sweeps** | `data-raw/pipelines/binned.R` | `bin_samples.rda`, `bucket_summary.rda`, `oob_performance.rda` | `Rscript -e "devtools::load_all(); source('data-raw/pipelines/binned.R'); run_binned_pipeline()"` |
+| **Deconstruction** | `data-raw/pipelines/deconstruction.R` | `deconstructed.rda`, `widened.rda`, `narrowed.rda` | `Rscript -e "devtools::load_all(); source('data-raw/pipelines/deconstruction.R'); run_deconstruction_pipeline()"` |
+| **Cluster bands** | `data-raw/pipelines/clusters.R` | `cluster_bands.rda`, `representative_clusters.rda` | `Rscript -e "devtools::load_all(); source('data-raw/pipelines/clusters.R'); run_cluster_pipeline()"` |
+| **CSV ➜ RDA conversion** | `data-raw/prepare_binned_data.R` | `equal*.rda`, `manybins.rda`, `varied_bins.rda` | `Rscript data-raw/prepare_binned_data.R` |
+
+Hints:
+
+- Pass `save_to_data = FALSE` when you only need in-memory results.
+- `run_binned_pipeline()` accepts smaller `bin_sizes`/`bucket_range` values for quick iteration; use the defaults when producing artifacts for plots.
+- After rerunning a pipeline, re-`load_all()` to pick up the new data.
+
+### Build, test, and check
+
+```sh
+Rscript -e "devtools::document()"
+Rscript -e "devtools::test()"
+R CMD build .
+R CMD check visualfrsr_0.0.0.9000.tar.gz
+```
+
+`R CMD check` currently reports two expected items:
+
+- **Repository access warnings** – the sandboxed environment cannot reach CRAN/Bioconductor indexes; the warnings are informational.
+- **Installed size NOTE** – `inst/extdata/` contains ~126 MB of CSV exports. Keep or prune as your workflow demands.
+
+The `.Rprofile` and `.Renviron.project` files pin compiler flags and set `OMP_NUM_THREADS=1`, `OPENBLAS_NUM_THREADS=1`, and `MKL_NUM_THREADS=1`. Keep those overrides intact so `{frsrr}`, `{Matrix}`, and `{Rglpk}` build consistently across macOS machines without tripping shared-memory OpenMP errors.
+
+Before sharing plots or analyses, regenerate the relevant pipeline so the placeholder `.rda` files in `data/` reflect real sampler output.
 
 ### R Files
 
