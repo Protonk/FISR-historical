@@ -48,11 +48,11 @@ find_optimal_buckets <- function(binned, M, chunk_size = 1e4) {
                              types = rep("B", n_slices),
                              max = FALSE)
 
-    selected <- chunk[result$solution == 1]
+    selected <- chunk[result$solution == 1, , drop = FALSE]
 
-    return( selected[order(Range_Min)] )
+    selected[order(selected$Range_Min), , drop = FALSE]
   }
-  setDT(binned)
+  binned <- as.data.frame(binned)
   n_total <- nrow(binned)
 
   if (n_total > chunk_size) {
@@ -64,12 +64,13 @@ find_optimal_buckets <- function(binned, M, chunk_size = 1e4) {
     for (i in seq_len(n_chunks)) {
       start_idx <- (i - 1) * chunk_size + 1
       end_idx <- min(i * chunk_size, n_total)
-      chunk <- binned[start_idx:end_idx]
+      chunk <- binned[start_idx:end_idx, , drop = FALSE]
       chunk_results[[i]] <- process_chunk(chunk, M)
     }
 
     # Combine results from all chunks & Final optimization on the combined results
-    process_chunk(rbindlist(chunk_results), M)
+    combined <- dplyr::bind_rows(chunk_results)
+    process_chunk(combined, M)
   } else {
     # if chunking isn't needed, process right away
     process_chunk(binned, M)
@@ -116,6 +117,66 @@ bucket_selection <- function(df, range = 4:100) {
     mutate(order = row_number()) |>
     ungroup() |>
     as.data.frame()
+}
+
+analyze_bin_changes <- function(df) {
+  ordered <- df |>
+    dplyr::arrange(input)
+
+  if (nrow(ordered) < 2) {
+    return(ordered[0, , drop = FALSE])
+  }
+
+  tibble::tibble(
+    delta_error = diff(ordered$error),
+    delta_magic = diff(ordered$magic),
+    mean_error = ordered$error[-1],
+    mean_magic = ordered$magic[-1]
+  )
+}
+
+compute_oob_performance <- function(data,
+                                    total_min = 0.5,
+                                    total_max = 2.0,
+                                    samples = 1000) {
+  frsr_oob <- function(magic, bin_min, bin_max) {
+    lower_samples <- frsrr::frsr_sample(
+      n = samples,
+      magic_min = magic,
+      magic_max = NULL,
+      x_min = total_min,
+      x_max = bin_min
+    )
+
+    upper_samples <- frsrr::frsr_sample(
+      n = samples,
+      magic_min = magic,
+      magic_max = NULL,
+      x_min = bin_max,
+      x_max = total_max
+    )
+
+    all_samples <- dplyr::bind_rows(lower_samples, upper_samples)
+    mean(all_samples$error)
+  }
+
+  data |>
+    dplyr::group_by(N) |>
+    dplyr::mutate(
+      OOB_Error = vapply(
+        seq_len(dplyr::n()),
+        function(i) {
+          frsr_oob(
+            Magic[i],
+            Range_Min[i],
+            Range_Max[i]
+          )
+        },
+        numeric(1)
+      )
+    ) |>
+    dplyr::ungroup() |>
+    tibble::as_tibble()
 }
 
 load_binned_csv <- function(filename) {

@@ -36,10 +36,10 @@ A tibble or named list ready for plotting.
 \description{
 These helpers enrich the raw outputs from \code{run_deconstruction_pipeline()} so
 plotting functions can focus on layer composition. Each function returns a
-\link[tibble:tibble]{tibble::tibble} tailored to a family of deconstruction visuals.
+tibble tailored to a family of deconstruction visuals.
 }
 \seealso{
-\code{run_deconstruction_pipeline()} for refreshing the underlying datasets
-and \code{\link{deconstruction_plots}} for the plotting helpers that consume
+\code{run_deconstruction_pipeline()} for refreshing the underlying
+datasets and \link{deconstruction_plots} for the plotting helpers that consume
 these transforms.
 }

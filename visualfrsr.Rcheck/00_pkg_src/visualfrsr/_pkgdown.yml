@@ -1,0 +1,28 @@
+template:
+  bootstrap: 5
+
+reference:
+  - title: "Visualization helpers"
+    desc: "Topic-specific ggplot builders powered by the refreshed datasets."
+    contents:
+      - binning_plots
+      - deconstruction_plots
+      - history_plots
+      - optimization_plots
+      - plot_sampled_clusters
+  - title: "Transformation utilities"
+    desc: "`prep_*` helpers that tidy pipeline outputs before plotting."
+    contents:
+      - transform_binning
+      - transform_deconstruction
+      - prep_cluster_samples
+      - prep_example_samples
+      - prep_optimized_results
+  - title: "Data objects"
+    desc: "Packaged datasets regenerated via the data-raw pipelines."
+    contents:
+      - bin_samples
+      - bucket_summary
+      - oob_performance
+      - load_bucket_sweep
+      - load_varied_bins

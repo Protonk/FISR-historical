@@ -5,7 +5,7 @@
 
 #' Prepare deconstruction-derived datasets for visualization.
 #' 
-#' These helpers enrich the raw outputs from [run_deconstruction_pipeline()] so
+#' These helpers enrich the raw outputs from \code{run_deconstruction_pipeline()} so
 #' plotting functions can focus on layer composition. Each function returns a
 #' tibble tailored to a family of deconstruction visuals.
 #'

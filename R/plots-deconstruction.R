@@ -15,7 +15,6 @@
 #' @param narrowed Zoomed-in deconstruction tibble.
 #' @param widened Wide sweep deconstruction tibble.
 #' @param iter_levels Iteration levels retained when spotlighting subsets.
-#' @param widened_data Output from [prep_deconstruction_combined()].
 #' @return A [ggplot2::ggplot] object.
 #' @name deconstruction_plots
 #' @seealso \code{run_deconstruction_pipeline()} for regenerating the source

@@ -8,7 +8,7 @@
 #' 
 #' Plot sampled clusters of magic constants across the input range. These
 #' layers assume data produced by \code{run_cluster_pipeline()} and tidied by
-#' [transform_clusters].
+#' helpers in \code{R/transform-clusters.R}.
 #' 
 #' @param clusters Tibble produced by [prep_cluster_samples()].
 #' @return A [ggplot2::ggplot] object visualising representative clusters.
@@ -29,4 +29,3 @@ plot_sampled_clusters <- function(clusters = prep_cluster_samples()) {
       color = "Cluster"
     )
 }
-

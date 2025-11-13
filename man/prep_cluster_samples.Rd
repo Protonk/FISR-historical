@@ -4,7 +4,11 @@
 \alias{prep_cluster_samples}
 \title{Prepare sampled clusters for plotting.}
 \usage{
-prep_cluster_samples(n = 16384, cluster_ranges = list(c(1597622357, 1597176038), c(1598049921, 1597918602), c(1597884263, 1596910052)))
+prep_cluster_samples(
+  n = 16384,
+  cluster_ranges = list(c(1597622357, 1597176038), c(1598049921, 1597918602),
+    c(1597884263, 1596910052))
+)
 }
 \arguments{
 \item{n}{Number of samples per cluster.}
@@ -15,11 +19,12 @@ prep_cluster_samples(n = 16384, cluster_ranges = list(c(1597622357, 1597176038),
 Tibble of sampled clusters.
 }
 \description{
-Wraps \code{sample_clusters()} so ggplot builders can accept either raw cluster draws
-or pre-computed data, bridging \code{run_cluster_pipeline()} to
-\code{\link{plot_sampled_clusters}}.
+Wraps \code{\link[=sample_clusters]{sample_clusters()}} so ggplot builders can accept either raw cluster
+draws or pre-computed data. The function simply forwards arguments to the
+sampler and returns the tidy tibble, bridging from
+\code{run_cluster_pipeline()} to \code{\link[=plot_sampled_clusters]{plot_sampled_clusters()}}.
 }
 \seealso{
-\code{run_cluster_pipeline()} for regenerating the clustering datasets and
-\code{\link{plot_sampled_clusters}} for visualising the prepared samples.
+\code{run_cluster_pipeline()} for regenerating the underlying data
+and \code{\link[=plot_sampled_clusters]{plot_sampled_clusters()}} for visualizing the prepared samples.
 }

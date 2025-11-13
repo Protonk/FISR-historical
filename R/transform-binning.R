@@ -10,15 +10,18 @@
 #' derived statistics produced after \code{run_binned_pipeline()}.
 #'
 #' @param bucket_df Output from [load_bucket_sweep()].
-#' @param selection_df Data frame returned by [bucket_selection()].
+#' @param selection_df Data frame returned by \code{bucket_selection()}.
 #' @param spread_df Data frame containing error spreads for paired plots.
 #' @param binned Dataset of optimal bucket summaries.
+#' @param df Binned dataset used when recomputing bucket selections.
 #' @param n_values Vector of `N` values to retain.
 #' @param n_small Small bucket count used for comparison visuals.
 #' @param n_large Large bucket count used for comparison visuals.
 #' @param bins Integer vector of bin counts to evaluate.
 #' @param range Vector of candidate bucket counts.
 #' @param error Which error metric to compare (`"max"` or `"avg"`).
+#' @param bucket1 First bucket selection tibble supplied to the comparator.
+#' @param bucket2 Second bucket selection tibble supplied to the comparator.
 #' 
 #' @return A tibble or list ready for downstream plotting.
 #' @name transform_binning

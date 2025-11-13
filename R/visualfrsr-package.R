@@ -11,7 +11,6 @@
 #'   rename row_number ungroup slice slice_min n ntile bind_rows bind_cols
 #'   distinct if_else transmute pull lag
 #' @importFrom tidyr pivot_longer pivot_wider drop_na
-#' @importFrom data.table setDT rbindlist
 #' @importFrom purrr map_dfr map2_dfr
 #' @importFrom tibble tibble
 #' @importFrom grDevices colorRampPalette

@@ -7,11 +7,17 @@
 plot_sampled_clusters(clusters = prep_cluster_samples())
 }
 \arguments{
-\item{clusters}{Tibble produced by \code{prep_cluster_samples()}.}
+\item{clusters}{Tibble produced by \code{\link[=prep_cluster_samples]{prep_cluster_samples()}}.}
 }
 \value{
 A \link[ggplot2:ggplot]{ggplot2::ggplot} object visualising representative clusters.
 }
 \description{
-Plot sampled clusters of magic constants across the input range.
+Plot sampled clusters of magic constants across the input range. These
+layers assume data produced by \code{run_cluster_pipeline()} and tidied by
+helpers in \code{R/transform-clusters.R}.
+}
+\seealso{
+\code{run_cluster_pipeline()} for regenerating the source datasets
+and \code{\link[=prep_cluster_samples]{prep_cluster_samples()}} for data preparation helpers.
 }

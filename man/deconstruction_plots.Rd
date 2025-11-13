@@ -42,12 +42,12 @@ A \link[ggplot2:ggplot]{ggplot2::ggplot} object.
 }
 \description{
 These plotting helpers pair with the datasets returned by
-\code{run_deconstruction_pipeline()}. Each function expects prepped data from the
-\code{prep_deconstruction_*()} family and returns a \link[ggplot2:ggplot]{ggplot2::ggplot}
-object ready for rendering.
+\code{run_deconstruction_pipeline()}. Each function expects prepped data from
+the \verb{prep_deconstruction_*()} family and returns a \link[ggplot2:ggplot]{ggplot2::ggplot} object
+ready for rendering.
 }
 \seealso{
-\code{run_deconstruction_pipeline()} for regenerating the deconstruction
-datasets and \code{\link{transform_deconstruction}} for the transformation
-helpers consumed here.
+\code{run_deconstruction_pipeline()} for regenerating the source
+datasets and \link{transform_deconstruction} for the companion transformation
+helpers.
 }

@@ -49,49 +49,6 @@ run_binned_pipeline <- function(
     dplyr::bind_rows(bins)
   }
 
-  compute_oob_performance <- function(data) {
-    frsr_oob <- function(magic, bin_min, bin_max, total_min, total_max) {
-      lower_samples <- frsrr::frsr_sample(
-        n = 1000,
-        magic_min = magic,
-        magic_max = NULL,
-        x_min = total_min,
-        x_max = bin_min
-      )
-
-      upper_samples <- frsrr::frsr_sample(
-        n = 1000,
-        magic_min = magic,
-        magic_max = NULL,
-        x_min = bin_max,
-        x_max = total_max
-      )
-
-      all_samples <- dplyr::bind_rows(lower_samples, upper_samples)
-      mean(all_samples$error)
-    }
-
-    data |>
-      dplyr::group_by(N) |>
-      dplyr::mutate(
-        OOB_Error = vapply(
-          seq_len(dplyr::n()),
-          function(i) {
-            frsr_oob(
-              Magic[i],
-              Range_Min[i],
-              Range_Max[i],
-              0.5,
-              2.0
-            )
-          },
-          numeric(1)
-        )
-      ) |>
-      dplyr::ungroup() |>
-      tibble::as_tibble()
-  }
-
   binned <- frsr_bin_multi(bin_sizes, x_min, x_max) |>
     tibble::as_tibble()
 

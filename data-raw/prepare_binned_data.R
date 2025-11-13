@@ -39,7 +39,9 @@ output_objects <- list(
 )
 
 purrr::iwalk(output_objects, function(obj, name) {
-  save(obj,
+  data_env <- list2env(setNames(list(obj), name), parent = emptyenv())
+  save(list = name,
        file = file.path(data_dir, paste0(name, ".rda")),
-       compress = "xz")
+       compress = "xz",
+       envir = data_env)
 })

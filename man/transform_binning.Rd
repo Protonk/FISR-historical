@@ -35,9 +35,9 @@ prep_bucket_error_curve(binned, bins = 4:36)
 prep_bucket_compare_buckets(bucket1, bucket2, error = "max")
 }
 \arguments{
-\item{bucket_df}{Output from \code{load_bucket_sweep()}.}
+\item{bucket_df}{Output from \code{\link[=load_bucket_sweep]{load_bucket_sweep()}}.}
 
-\item{df}{Dataset of optimal bucket summaries used by \code{prep_bucket_selection()} or \code{prep_bucket_error_segments()}.}
+\item{df}{Binned dataset used when recomputing bucket selections.}
 
 \item{range}{Vector of candidate bucket counts.}
 
@@ -55,9 +55,9 @@ prep_bucket_compare_buckets(bucket1, bucket2, error = "max")
 
 \item{bins}{Integer vector of bin counts to evaluate.}
 
-\item{bucket1}{First bucket selection tibble.}
+\item{bucket1}{First bucket selection tibble supplied to the comparator.}
 
-\item{bucket2}{Second bucket selection tibble.}
+\item{bucket2}{Second bucket selection tibble supplied to the comparator.}
 
 \item{error}{Which error metric to compare (\code{"max"} or \code{"avg"}).}
 }
@@ -71,6 +71,5 @@ derived statistics produced after \code{run_binned_pipeline()}.
 }
 \seealso{
 \code{run_binned_pipeline()} for regenerating the source data and
-\code{\link{binning_plots}} for the visual layers that consume these
-transforms.
+\link{binning_plots} for the visual layers that consume these transforms.
 }

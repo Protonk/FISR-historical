@@ -82,7 +82,7 @@ plot_bucket_rectangles <- function(selection_df = prep_bucket_selection()) {
       expand = c(0, 0),
       limits = c(12, NA)
     ) +
-    viridis::scale_fill_viridis_d() +
+    viridis::scale_fill_viridis(discrete = TRUE) +
     ggplot2::theme_void() +
     ggplot2::labs(x = "Position", y = "M", fill = "N") +
     ggplot2::guides(fill = "none")

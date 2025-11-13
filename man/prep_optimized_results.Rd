@@ -4,22 +4,21 @@
 \alias{prep_optimized_results}
 \title{Prepare optimized parameter search results for plotting.}
 \usage{
-prep_optimized_results(slices = 100000, GRID_SIZE = 50)
+prep_optimized_results(slices = 1e+05, GRID_SIZE = 50)
 }
 \arguments{
-\item{slices}{Number of simulated slices passed to \code{compute_result_block()}.}
+\item{slices}{Number of float samples drawn from \code{frsr_sample()}.}
 
-\item{GRID_SIZE}{Resolution of the search grid.}
+\item{GRID_SIZE}{Resolution of the ranking grid applied to \code{A}, \code{B},
+and error columns.}
 }
 \value{
 Tibble describing optimization outcomes.
 }
 \description{
-Convenience wrapper around \code{compute_result_block()} that bridges the
-outputs of \code{run_binned_pipeline()} to the plotting helpers in
-\code{\link{optimization_plots}}.
+Prepare optimized parameter search results for plotting.
 }
 \seealso{
-\code{run_binned_pipeline()} for regenerating the optimization sweeps and
-\code{\link{optimization_plots}} for visualising the prepared data.
+\code{run_binned_pipeline()} for regenerating the optimization
+sweeps and \link{optimization_plots} for plotting helpers.
 }

@@ -14,18 +14,16 @@ plot_optimized_paths(optimized = prep_optimized_results())
 plot_optimized_pairs(optimized = prep_optimized_results())
 }
 \arguments{
-\item{optimized}{Tibble produced by \code{prep_optimized_results()}.}
+\item{optimized}{Tibble produced by \code{\link[=prep_optimized_results]{prep_optimized_results()}}.}
 }
 \value{
 A \link[ggplot2:ggplot]{ggplot2::ggplot} object summarizing optimization landscapes.
 }
 \description{
-Plot views over the parameter search landscape for Newton-Raphson refinements.
-The helpers expect data regenerated via \code{run_binned_pipeline()} and
-prepared with \code{\link{prep_optimized_results}}.
+Optimization visualization builders.
 }
 \seealso{
-\code{run_binned_pipeline()} for regenerating the optimization search grids
-and \code{\link{prep_optimized_results}} for producing the tidy search results
-consumed by these plots.
+\code{run_binned_pipeline()} for regenerating the optimization
+landscapes and \code{\link[=prep_optimized_results]{prep_optimized_results()}} for producing the tidy search
+results consumed by these plots.
 }

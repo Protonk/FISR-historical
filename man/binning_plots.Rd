@@ -35,13 +35,13 @@ compare_n_values(binned, n_small, n_large)
 compare_buckets(bucket1, bucket2, error = "max")
 }
 \arguments{
-\item{bucket_df}{Data frame returned by \code{load_bucket_sweep()}.}
+\item{bucket_df}{Bucket definitions for the binned view.}
 
-\item{selection_df}{Tibble from \code{prep_bucket_selection()}.}
+\item{selection_df}{Data frame created by \code{\link[=prep_bucket_selection]{prep_bucket_selection()}}.}
 
 \item{spread_df}{Error spread tibble for overlayed scatter/smooth layers.}
 
-\item{binned}{Binned dataset of optimal selections.}
+\item{binned}{Dataset with multiple bucket counts.}
 
 \item{n_values}{Bucket counts retained in the facets.}
 
@@ -58,15 +58,15 @@ compare_buckets(bucket1, bucket2, error = "max")
 \item{error}{Error column to compare (\code{"max"} or \code{"avg"}).}
 }
 \value{
-A \link[ggplot2:ggplot]{ggplot2::ggplot} object.
+A \link[ggplot2:ggplot]{ggplot2::ggplot} heatmap of bucket selections.
 }
 \description{
-Assemble ggplot layers for the binned datasets and helpers. The functions
-assume inputs prepared by \code{\link{transform_binning}} after refreshing the
-underlying data via \code{run_binned_pipeline()} in
-\file{data-raw/pipelines/binned.R}.
+Assemble ggplot layers for the binned datasets and helpers. These
+functions expect inputs prepared by \link{transform_binning} and ultimately draw
+from the artifacts refreshed via \code{run_binned_pipeline()}.
 }
 \seealso{
-\code{run_binned_pipeline()} for regenerating the binning datasets and
-\code{\link{transform_binning}} for the companion data wrangling helpers.
+\code{run_binned_pipeline()} for producing the datasets that feed
+these plots and \link{transform_binning} for the supporting data wrangling
+helpers.
 }

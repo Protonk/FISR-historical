@@ -1,0 +1,34 @@
+bin_samples             Binned optimisation artifacts
+binning_plots           Binning visualization builders.
+build_heatmap_data      Heatmap-ready data summarizing location, bin
+                        count, and magic.
+cluster_bands           Cluster exploration artifacts
+create_slices           Slice frsr sample data into equal-width bins.
+deconstructed           Core deconstruction samples
+deconstruction_plots    Deconstruction visualization builders.
+equal_bins_data         Reference bin catalogs derived from CSV
+                        exports.
+find_optimal_magic      Find the optimal magic constant for a slice.
+generate_example_samples
+                        Generate deterministic comparison samples
+                        across classical FRSR variants.
+history_plots           Historical approximation visualization
+                        builders.
+load_bucket_sweep       Load precomputed bucket sweeps.
+load_varied_bins        Load the varied bin dataset with ordered Bottom
+                        factor.
+logStratifiedSampler    Log-stratified sampler for floats.
+optimization_plots      Optimization visualization builders.
+plot_sampled_clusters   Cluster visualization builders.
+prep_cluster_samples    Prepare sampled clusters for plotting.
+prep_example_samples    Prepare historical approximation datasets for
+                        plotting.
+prep_optimized_results
+                        Prepare optimized parameter search results for
+                        plotting.
+sample_clusters         Sample representative clusters for downstream
+                        visualizations.
+transform_binning       Prepare binned data products for visualization.
+transform_deconstruction
+                        Prepare deconstruction-derived datasets for
+                        visualization.
